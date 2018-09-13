@@ -13,18 +13,31 @@ app.use(cors({optionSuccessStatus: 200}));  // some legacy browsers choke on 204
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
+const bodyParser = require('body-parser');
+app.use(bodyParser({urlencoded: true}));
+
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
 
-// your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
+app.get('/api/timestamp/:dateString', (req, res) => {
+  let dateString = req.params.dateString;
+  try {
+    let date;
+    if(dateString == '') date = new Date();
+    else date = new Date(dateString);
+    
+    res.json({
+      "unix": date.getTime(),
+      "utc": date.toUTCString()
+    });
+    
+  } catch(e) {
+    res.json({"error": "Invalid Date"});
+  }
 });
-
-
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
