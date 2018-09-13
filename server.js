@@ -21,12 +21,11 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-
-app.get('/api/timestamp/:dateString', (req, res) => {
+app.get('/api/timestamp/:dateString?', (req, res) => {
   let dateString = req.params.dateString;
   try {
     let date;
-    if(dateString == '') date = new Date();
+    if(!dateString) date = new Date();
     else date = new Date(dateString);
     
     res.json({
